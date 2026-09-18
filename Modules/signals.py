@@ -1,7 +1,7 @@
-"""Synthetic signals used by the digitization simulator.
+"""Señales sintéticas utilizadas por el simulador de digitalización.
 
-The constants are intentionally fixed because the project specification states
-that A, f0, and a are design constants rather than user parameters.
+Las constantes se mantienen fijas porque la especificación del proyecto indica
+que A, f0 y a son constantes de diseño y no parámetros definidos por el usuario.
 """
 
 from typing import Callable, Dict
@@ -28,7 +28,7 @@ def _as_time_array(time: np.ndarray) -> np.ndarray:
 
 
 def normalized_sinc(argument: np.ndarray) -> np.ndarray:
-    """Evaluate sinc(u) = sin(pi*u)/(pi*u), including sinc(0) = 1."""
+    """Evalúa sinc(u) = sin(pi*u)/(pi*u), incluyendo sinc(0) = 1."""
 
     values = np.asarray(argument, dtype=float)
     result = np.ones_like(values, dtype=float)
@@ -43,7 +43,7 @@ def signal_a(
     amplitude: float = DEFAULT_AMPLITUDE,
     frequency: float = DEFAULT_TONE_FREQUENCY,
 ) -> np.ndarray:
-    """Generate y(t) = A*cos(2*pi*f0*t)."""
+    """Genera y(t) = A*cos(2*pi*f0*t)."""
 
     time_array = _as_time_array(time)
     amplitude_value = float(amplitude)
@@ -56,7 +56,7 @@ def signal_a(
 def signal_b(
     time: np.ndarray, parameter: float = DEFAULT_SINC_PARAMETER
 ) -> np.ndarray:
-    """Generate x(t) = sinc(2*a*t) using the normalized sinc definition."""
+    """Genera x(t) = sinc(2*a*t) usando la definición normalizada de sinc."""
 
     time_array = _as_time_array(time)
     parameter_value = float(parameter)
@@ -68,7 +68,7 @@ def signal_b(
 def signal_c(
     time: np.ndarray, parameter: float = DEFAULT_SINC_PARAMETER
 ) -> np.ndarray:
-    """Generate z(t) = sinc^2(a*t) + x(t)."""
+    """Genera z(t) = sinc^2(a*t) + x(t)."""
 
     time_array = _as_time_array(time)
     parameter_value = float(parameter)
@@ -80,13 +80,13 @@ def signal_c(
 
 
 def available_signals() -> tuple[str, ...]:
-    """Return the synthetic signal identifiers in GUI display order."""
+    """Devuelve los identificadores de las señales sintéticas en el orden de visualización de la GUI."""
 
     return SIGNAL_A, SIGNAL_B, SIGNAL_C
 
 
 def generate_signal(name: str, time: np.ndarray) -> np.ndarray:
-    """Generate one synthetic signal selected by its identifier."""
+    """Genera una señal sintética seleccionada por su identificador."""
 
     generators: Dict[str, Callable[[np.ndarray], np.ndarray]] = {
         SIGNAL_A: signal_a,
@@ -102,7 +102,7 @@ def generate_signal(name: str, time: np.ndarray) -> np.ndarray:
 
 
 def create_time_axis(duration: float = 2.0, representation_fs: float = 2000.0) -> np.ndarray:
-    """Create the dense time grid used to represent an analog-like signal."""
+    """Crea la malla temporal densa usada para representar una señal tipo analógica."""
 
     duration_value = float(duration)
     frequency_value = float(representation_fs)

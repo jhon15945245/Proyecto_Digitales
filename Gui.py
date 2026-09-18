@@ -1,4 +1,4 @@
-"""Graphical interface for the signal digitization project."""
+"""Interfaz gráfica para el proyecto de digitalización de señales."""
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -14,7 +14,7 @@ from Modules.simulation import SimulationResult, simulate_audio, simulate_synthe
 
 
 class DigitizationApp:
-    """Interactive simulator for sampling, quantization and reconstruction."""
+    """Simulador interactivo para muestreo, cuantización y reconstrucción."""
 
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
@@ -161,8 +161,8 @@ class DigitizationApp:
     def _on_signal_changed(self, _event=None) -> None:
         is_audio = self.signal_var.get().startswith("D")
         if is_audio:
-            # The time/duration slider must remain usable for audio.  It controls
-            # the portion of the loaded WAV used by the current simulation.
+            # El control de tiempo/duración debe permanecer usable para audio. Controla
+            # la porción del WAV cargado que se usa en la simulación actual.
             self.duration_scale.configure(state=tk.NORMAL)
             if self.audio is not None:
                 self.fs_var.set(float(self.audio.sample_rate))

@@ -1,4 +1,4 @@
-"""Application-level simulation pipelines."""
+"""Pipelines de simulación a nivel de aplicación."""
 
 from dataclasses import dataclass
 import numpy as np
@@ -69,7 +69,7 @@ def run_simulation(
     levels: int,
     is_audio: bool = False,
 ) -> SimulationResult:
-    """Run sampling, quantization, ZOH reconstruction, FFTs and metrics."""
+    """Ejecuta muestreo, cuantización, reconstrucción ZOH, FFT y métricas."""
 
     time_array, signal_array = _validate_signal_inputs(time, signal)
     source_fs = validate_sampling_frequency(original_fs)
@@ -120,15 +120,15 @@ def simulate_synthetic(
 
 
 def simulate_audio(audio: AudioSignal, sampling_fs: float, levels: int = 16) -> SimulationResult:
-    """Explicitly resample audio, requantize it, and compare at source rate.
+    """Remuestrea explícitamente el audio, lo requantiza y lo compara a la tasa original.
 
-    Processing chain:
-        original WAV -> resampling -> uniform quantization -> ZOH-like sample
-        reconstruction at target rate -> resampling back to source rate.
+    Cadena de procesamiento:
+        WAV original -> remuestreo -> cuantización uniforme -> reconstrucción tipo
+        ZOH a la tasa objetivo -> remuestreo de regreso a la tasa original.
 
-    The returned ``reconstructed`` is on the original audio grid so that MSE,
-    SQNR and spectral error are computed against arrays with the same sampling
-    rate. ``playback_reconstructed`` remains at the selected target rate.
+    La ``reconstructed`` devuelta está en la malla original del audio para que MSE,
+    SQNR y error espectral se calculen con arreglos de la misma frecuencia de
+    muestreo. ``playback_reconstructed`` permanece a la tasa objetivo seleccionada.
     """
 
     target_fs = validate_sampling_frequency(sampling_fs)

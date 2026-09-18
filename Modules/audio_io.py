@@ -1,8 +1,8 @@
-"""WAV loading and playback utilities for the digitization simulator.
+"""Utilidades para cargar y reproducir WAV en el simulador de digitalización.
 
-WAV decoding uses only the Python standard library. Audio samples are exposed
-as mono floating-point arrays in the range [-1, 1]. Resampling is delegated to
-the manual NumPy implementation in dsp_core.py.
+La decodificación de WAV usa solo la biblioteca estándar de Python. Las muestras
+se exponen como arreglos mono en punto flotante en el rango [-1, 1]. El
+remuestreo se delega a la implementación manual en NumPy de dsp_core.py.
 """
 
 from dataclasses import dataclass
@@ -20,7 +20,7 @@ SUPPORTED_SAMPLE_WIDTHS = (1, 2, 3, 4)
 
 @dataclass(frozen=True)
 class AudioSignal:
-    """Decoded mono audio and its source metadata."""
+    """Audio mono decodificado y sus metadatos de origen."""
 
     samples: np.ndarray
     sample_rate: int
@@ -30,13 +30,13 @@ class AudioSignal:
 
     @property
     def duration(self) -> float:
-        """Return the duration in seconds."""
+        """Devuelve la duración en segundos."""
 
         return self.samples.size / self.sample_rate
 
 
 def _decode_pcm(raw_data: bytes, sample_width: int) -> np.ndarray:
-    """Decode little-endian PCM bytes into float samples in [-1, 1]."""
+    """Decodifica bytes PCM little-endian en muestras flotantes en [-1, 1]."""
 
     if sample_width == 1:
         unsigned_values = np.frombuffer(raw_data, dtype=np.uint8).astype(np.float64)
@@ -65,7 +65,7 @@ def _decode_pcm(raw_data: bytes, sample_width: int) -> np.ndarray:
 
 
 def _to_mono(interleaved_samples: np.ndarray, channels: int) -> np.ndarray:
-    """Convert interleaved samples to mono by averaging channels."""
+    """Convierte muestras entrelazadas a mono promediando los canales."""
 
     if channels == 1:
         return interleaved_samples.copy()
@@ -78,10 +78,10 @@ def _to_mono(interleaved_samples: np.ndarray, channels: int) -> np.ndarray:
 
 
 def load_wav(path: str, minimum_duration: float = MIN_AUDIO_DURATION_SECONDS) -> AudioSignal:
-    """Load a PCM WAV file and return its mono floating-point representation.
+    """Carga un archivo WAV PCM y devuelve su representación mono en punto flotante.
 
-    The default project requirement is a minimum duration of 20 seconds. Pass
-    ``minimum_duration=0`` when a short test fixture is intentionally used.
+    El requisito predeterminado del proyecto es una duración mínima de 20 segundos.
+    Se puede pasar ``minimum_duration=0`` cuando se usa un archivo corto como prueba.
     """
 
     file_path = Path(path)
@@ -122,7 +122,7 @@ def load_wav(path: str, minimum_duration: float = MIN_AUDIO_DURATION_SECONDS) ->
 
 
 def resample_audio(audio: AudioSignal, target_rate: float) -> AudioSignal:
-    """Return an audio signal manually resampled to ``target_rate``."""
+    """Devuelve una señal de audio remuestreada manualmente a ``target_rate``."""
 
     validated_rate = validate_sampling_frequency(target_rate)
     integer_rate = int(round(validated_rate))
@@ -139,7 +139,7 @@ def resample_audio(audio: AudioSignal, target_rate: float) -> AudioSignal:
 
 
 def requantize_audio(audio: AudioSignal, levels: int) -> np.ndarray:
-    """Quantize audio samples and return only the reconstructed sample values."""
+    """Cuantiza las muestras de audio y devuelve solo los valores reconstruidos."""
 
     from .dsp_core import quantize_uniform
 
@@ -148,7 +148,7 @@ def requantize_audio(audio: AudioSignal, levels: int) -> np.ndarray:
 
 
 def play_audio(samples: np.ndarray, sample_rate: float, blocking: bool = False) -> None:
-    """Play mono floating-point samples using sounddevice."""
+    """Reproduce muestras mono en punto flotante usando sounddevice."""
 
     values = np.asarray(samples, dtype=np.float32)
     if values.ndim != 1 or values.size == 0:
@@ -168,7 +168,7 @@ def play_audio(samples: np.ndarray, sample_rate: float, blocking: bool = False) 
 
 
 def stop_audio() -> None:
-    """Stop any audio currently played by sounddevice."""
+    """Detiene cualquier audio que esté reproduciéndose con sounddevice."""
 
     try:
         import sounddevice as sd

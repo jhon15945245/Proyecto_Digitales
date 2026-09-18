@@ -1,4 +1,4 @@
-"""Entry point for the digitization simulator."""
+"""Punto de entrada del simulador de digitalización."""
 
 from Gui import main
 

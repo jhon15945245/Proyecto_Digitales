@@ -1,4 +1,4 @@
-"""Reproducible experiments required by the project specification."""
+"""Experimentos reproducibles requeridos por la especificación del proyecto."""
 
 from dataclasses import dataclass
 import csv
@@ -43,7 +43,7 @@ def quantization_experiment(
     representation_fs: float = 2000.0,
     nyquist_fs: float = 10.0,
 ) -> list[QuantizationRow]:
-    """Table 1: signal C at its Nyquist sampling frequency."""
+    """Tabla 1: señal C a su frecuencia de muestreo de Nyquist."""
 
     rows = []
     for levels in QUANTIZATION_LEVELS:
@@ -62,7 +62,7 @@ def sampling_frequency_experiment(
     audio: AudioSignal,
     quantization_levels: int = 16,
 ) -> list[SamplingRow]:
-    """Table 2: signal D at the eight required relative sampling rates."""
+    """Tabla 2: señal D a las ocho frecuencias relativas de muestreo requeridas."""
 
     rows = []
     for factor in SAMPLING_FACTORS:

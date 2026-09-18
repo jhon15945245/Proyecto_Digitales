@@ -1,7 +1,7 @@
-"""Core numerical routines for the signal digitization simulator.
+"""Rutinas numéricas centrales para el simulador de digitalización de señales.
 
-The project is implemented with NumPy and the Python standard library.  No
-high-level DSP resampling/quantization functions are used.
+El proyecto se implementa con NumPy y la biblioteca estándar de Python. No se
+usan funciones de DSP de alto nivel para remuestreo o cuantización.
 """
 
 from dataclasses import dataclass
@@ -31,7 +31,7 @@ class QuantizedSignal:
 
 @dataclass(frozen=True)
 class AudioProcessingResult:
-    """Audio after explicit resampling and uniform quantization."""
+    """Audio después de remuestreo explícito y cuantización uniforme."""
 
     resampled: np.ndarray
     quantized: np.ndarray
@@ -73,7 +73,7 @@ def _validate_time_axis(time: np.ndarray) -> np.ndarray:
 def _linear_interpolate(
     source_time: np.ndarray, source_values: np.ndarray, target_time: np.ndarray
 ) -> np.ndarray:
-    """Linear interpolation implemented explicitly with index arithmetic."""
+    """Interpolación lineal implementada explícitamente con aritmética de índices."""
 
     source_time = _validate_time_axis(source_time)
     source_values = _as_1d_float(source_values, "source_values")
@@ -93,7 +93,7 @@ def _linear_interpolate(
 
 
 def sample_ideal_pulses(time: np.ndarray, signal: np.ndarray, fs: float) -> SampledSignal:
-    """Obtain samples x(nTs) at the selected sampling frequency."""
+    """Obtiene muestras x(nTs) a la frecuencia de muestreo seleccionada."""
 
     time_array = _validate_time_axis(time)
     signal_array = _as_1d_float(signal, "signal")
@@ -110,11 +110,11 @@ def sample_ideal_pulses(time: np.ndarray, signal: np.ndarray, fs: float) -> Samp
 
 
 def pulse_train(time: np.ndarray, sampled: SampledSignal) -> np.ndarray:
-    """Represent the ideal-sampling impulses on a dense display grid.
+    """Representa los impulsos de muestreo ideal en una malla visual densa.
 
-    Each sample is shown at its nearest representation-grid position.  The
-    result is intended for visualization of the sampled signal, not as a
-    continuous-time Dirac-delta distribution.
+    Cada muestra se muestra en la posición más cercana de la malla de
+    representación. El resultado está pensado para visualizar la señal muestreada,
+    no como una distribución continua de deltas de Dirac en tiempo continuo.
     """
 
     time_array = _validate_time_axis(time)
@@ -133,12 +133,12 @@ def pulse_train(time: np.ndarray, sampled: SampledSignal) -> np.ndarray:
 
 
 def resample_linear(signal: np.ndarray, original_fs: float, target_fs: float) -> np.ndarray:
-    """Manually resample a mono signal by linear interpolation.
+    """Remuestrea manualmente una señal mono por interpolación lineal.
 
-    This deliberately does not call scipy.signal.resample or an equivalent
-    high-level DSP routine.  No anti-alias filter is hidden inside the method,
-    which is useful here because the project studies the effect of sampling
-    frequency and spectral error.
+    Esto no llama a scipy.signal.resample ni a ninguna rutina DSP de alto nivel.
+    No hay un filtro anti-aliasing oculto dentro del método, lo cual es útil aquí
+    porque el proyecto estudia el efecto de la frecuencia de muestreo y del error
+    espectral.
     """
 
     signal_array = _as_1d_float(signal, "signal")
@@ -158,7 +158,7 @@ def resample_linear(signal: np.ndarray, original_fs: float, target_fs: float) ->
 def quantize_uniform(
     signal: np.ndarray, levels: int, minimum: float = None, maximum: float = None
 ) -> QuantizedSignal:
-    """Apply a uniform mid-rise quantizer."""
+    """Aplica un cuantizador uniforme de tipo mid-rise."""
 
     signal_array = _as_1d_float(signal, "signal")
     level_count = validate_levels(levels)
@@ -177,7 +177,7 @@ def quantize_uniform(
 def reconstruct_zero_order_hold(
     sample_time: np.ndarray, sample_values: np.ndarray, time: np.ndarray
 ) -> np.ndarray:
-    """Reconstruct by zero-order hold (ZOH)."""
+    """Reconstruye mediante retención de orden cero (ZOH)."""
 
     sample_times = _validate_time_axis(sample_time)
     values = _as_1d_float(sample_values, "sample_values")
@@ -191,7 +191,7 @@ def reconstruct_zero_order_hold(
 
 
 def one_sided_spectrum(signal: np.ndarray, fs: float) -> Tuple[np.ndarray, np.ndarray]:
-    """Compute a one-sided amplitude spectrum with FFT."""
+    """Calcula un espectro de amplitud unilateral con FFT."""
 
     values = _as_1d_float(signal, "signal")
     frequency = validate_sampling_frequency(fs)
@@ -209,7 +209,7 @@ def one_sided_spectrum(signal: np.ndarray, fs: float) -> Tuple[np.ndarray, np.nd
 def calculate_metrics(
     original: np.ndarray, reconstructed: np.ndarray, fs: float = None
 ) -> Tuple[float, float, float]:
-    """Return MSE, SQNR (dB), and normalized RMS spectral error."""
+    """Devuelve MSE, SQNR (dB) y error espectral RMS normalizado."""
 
     original_array = _as_1d_float(original, "original")
     reconstructed_array = _as_1d_float(reconstructed, "reconstructed")
@@ -239,13 +239,13 @@ def calculate_metrics(
 
 
 def source_quantization_metrics(signal: np.ndarray, sample_width: int) -> Tuple[float, float, float, int]:
-    """Estimate metrics associated with the PCM quantization resolution.
+    """Estima métricas asociadas a la resolución de cuantización PCM.
 
-    The loaded WAV is already a digital signal, so an analog reference is not
-    available.  We therefore report a transparent reference obtained by
-    applying a uniform quantizer over [-1, 1] using the WAV's nominal PCM
-    resolution.  This is a reproducible reference, not an estimate of the
-    original microphone/analog waveform.
+    El WAV cargado ya es una señal digital, por lo que no existe una referencia
+    analógica disponible. Por ello se reporta una referencia transparente obtenida
+    aplicando un cuantizador uniforme sobre [-1, 1] usando la resolución PCM
+    nominal del WAV. Esta es una referencia reproducible, no una estimación de la
+    forma de onda analógica original del micrófono.
     """
 
     if sample_width not in (1, 2, 3, 4):
