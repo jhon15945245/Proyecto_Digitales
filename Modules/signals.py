@@ -5,7 +5,6 @@ que A, f0 y a son constantes de diseño y no parámetros definidos por el usuari
 """
 
 from typing import Callable, Dict
-
 import numpy as np
 
 

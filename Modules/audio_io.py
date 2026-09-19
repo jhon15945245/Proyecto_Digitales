@@ -8,10 +8,9 @@ remuestreo se delega a la implementación manual en NumPy de dsp_core.py.
 from dataclasses import dataclass
 from pathlib import Path
 import wave
-
 import numpy as np
 
-from .dsp_core import resample_linear, validate_sampling_frequency
+from .dsp_core import resample_linear, validate_sampling_frequency """Estas funciones son extraidas de dsp_core.py para remuestreo y validación de frecuencia de muestreo."""
 
 
 MIN_AUDIO_DURATION_SECONDS = 20.0

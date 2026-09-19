@@ -133,13 +133,7 @@ def pulse_train(time: np.ndarray, sampled: SampledSignal) -> np.ndarray:
 
 
 def resample_linear(signal: np.ndarray, original_fs: float, target_fs: float) -> np.ndarray:
-    """Remuestrea manualmente una señal mono por interpolación lineal.
-
-    Esto no llama a scipy.signal.resample ni a ninguna rutina DSP de alto nivel.
-    No hay un filtro anti-aliasing oculto dentro del método, lo cual es útil aquí
-    porque el proyecto estudia el efecto de la frecuencia de muestreo y del error
-    espectral.
-    """
+    """Remuestrea manualmente una señal mono por interpolación lineal."""
 
     signal_array = _as_1d_float(signal, "signal")
     source_frequency = validate_sampling_frequency(original_fs)
@@ -239,14 +233,11 @@ def calculate_metrics(
 
 
 def source_quantization_metrics(signal: np.ndarray, sample_width: int) -> Tuple[float, float, float, int]:
-    """Estima métricas asociadas a la resolución de cuantización PCM.
+    """Estima métricas asociadas a la cuantización PCM.
 
     El WAV cargado ya es una señal digital, por lo que no existe una referencia
     analógica disponible. Por ello se reporta una referencia transparente obtenida
-    aplicando un cuantizador uniforme sobre [-1, 1] usando la resolución PCM
-    nominal del WAV. Esta es una referencia reproducible, no una estimación de la
-    forma de onda analógica original del micrófono.
-    """
+    aplicando un cuantizador uniforme sobre [-1, 1]"""
 
     if sample_width not in (1, 2, 3, 4):
         raise ValueError("unsupported PCM sample width")

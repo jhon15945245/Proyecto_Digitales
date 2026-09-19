@@ -42,19 +42,33 @@ class DigitizationApp:
         self.reference_sqnr_var = tk.StringVar(value="-")
         self.reference_spectral_var = tk.StringVar(value="-")
         self.reference_info_var = tk.StringVar(value="Referencia: -")
-        self.info_var = tk.StringVar(value="Sin archivo de audio")
+        self.info_var = tk.StringVar(value="Audio: no cargado")
         self.step_var = tk.StringVar(value="Δ = -")
         self.ts_var = tk.StringVar(value="Ts = -")
 
+        self._configure_styles()
         self._build_controls()
         self._build_plots()
         self._schedule_update()
+
+    def _configure_styles(self) -> None:
+        style = ttk.Style(self.root)
+        style.configure("TLabel", font=("Segoe UI", 11))
+        style.configure("Control.TLabel", font=("Segoe UI", 11, "bold"), foreground="#203040")
+        style.configure("Value.TLabel", font=("Segoe UI", 11, "bold"), foreground="#075985")
+        style.configure("Info.TLabel", font=("Segoe UI", 10), foreground="#52606d")
+        style.configure("Status.TLabel", font=("Segoe UI", 11, "bold"), foreground="#166534")
+        style.configure("TLabelframe.Label", font=("Segoe UI", 11, "bold"), foreground="#0f4c5c")
+        style.configure("TButton", font=("Segoe UI", 10, "bold"), padding=(8, 4))
+        style.configure("TCheckbutton", font=("Segoe UI", 11))
+        style.configure("TCombobox", font=("Segoe UI", 11))
+        style.configure("TEntry", font=("Segoe UI", 11))
 
     def _build_controls(self) -> None:
         controls = ttk.Frame(self.root, padding=10)
         controls.pack(side=tk.TOP, fill=tk.X)
 
-        ttk.Label(controls, text="Señal:").grid(row=0, column=0, sticky="w")
+        ttk.Label(controls, text="Señal:", style="Control.TLabel").grid(row=0, column=0, sticky="w")
         signal_menu = ttk.Combobox(
             controls,
             textvariable=self.signal_var,
@@ -65,7 +79,7 @@ class DigitizationApp:
         signal_menu.grid(row=0, column=1, padx=(4, 18))
         signal_menu.bind("<<ComboboxSelected>>", self._on_signal_changed)
 
-        ttk.Label(controls, text="Niveles:").grid(row=0, column=2, sticky="w")
+        ttk.Label(controls, text="Niveles:", style="Control.TLabel").grid(row=0, column=2, sticky="w")
         levels_menu = ttk.Combobox(
             controls,
             textvariable=self.levels_var,
@@ -76,13 +90,13 @@ class DigitizationApp:
         levels_menu.grid(row=0, column=3, sticky="w", padx=(4, 18))
         levels_menu.bind("<<ComboboxSelected>>", lambda _event: self._schedule_update())
 
-        ttk.Label(controls, text="fs (Hz):").grid(row=0, column=4, sticky="w")
+        ttk.Label(controls, text="fs (Hz):", style="Control.TLabel").grid(row=0, column=4, sticky="w")
         self.fs_entry = ttk.Entry(controls, textvariable=self.fs_entry_var, width=10)
         self.fs_entry.grid(row=0, column=5, padx=(4, 4))
         self.fs_entry.bind("<Return>", lambda _event: self.apply_frequency())
         ttk.Button(controls, text="Aplicar fs", command=self.apply_frequency).grid(row=0, column=6, padx=(0, 12))
 
-        ttk.Label(controls, text="Duración (s):").grid(row=0, column=7, sticky="w")
+        ttk.Label(controls, text="Duración (s):", style="Control.TLabel").grid(row=0, column=7, sticky="w")
         self.duration_scale = tk.Scale(
             controls,
             variable=self.duration_var,
@@ -97,15 +111,14 @@ class DigitizationApp:
         self.duration_scale.grid(row=0, column=8, padx=(4, 18))
 
         ttk.Button(controls, text="Cargar WAV", command=self.load_audio).grid(row=0, column=9, padx=3)
-        ttk.Button(controls, text="Actualizar", command=self.update_simulation).grid(row=0, column=10, padx=3)
-        ttk.Button(controls, text="Detener", command=self.stop_playback).grid(row=0, column=11, padx=3)
+        ttk.Button(controls, text="Detener", command=self.stop_playback).grid(row=0, column=10, padx=3)
 
-        ttk.Label(controls, textvariable=self.info_var).grid(
+        ttk.Label(controls, textvariable=self.info_var, style="Info.TLabel").grid(
             row=1, column=0, columnspan=4, sticky="w", pady=(8, 0)
         )
-        ttk.Label(controls, textvariable=self.ts_var).grid(row=1, column=4, columnspan=2, sticky="w", pady=(8, 0))
-        ttk.Label(controls, textvariable=self.step_var).grid(row=1, column=6, columnspan=3, sticky="w", pady=(8, 0))
-        ttk.Label(controls, textvariable=self.status_var).grid(
+        ttk.Label(controls, textvariable=self.ts_var, style="Value.TLabel").grid(row=1, column=4, columnspan=2, sticky="w", pady=(8, 0))
+        ttk.Label(controls, textvariable=self.step_var, style="Value.TLabel").grid(row=1, column=6, columnspan=3, sticky="w", pady=(8, 0))
+        ttk.Label(controls, textvariable=self.status_var, style="Status.TLabel").grid(
             row=1, column=9, columnspan=3, sticky="e", pady=(8, 0)
         )
 
@@ -278,11 +291,11 @@ class DigitizationApp:
         self.signal_var.set("D - Audio")
         self.info_var.set(
             f"Audio: {self.audio.sample_rate} Hz | {self.audio.duration:.2f} s | "
-            f"{self.audio.channels} canal(es) | PCM {self.audio.sample_width * 8} bits"
+            f"{self.audio.channels} canal(es)"
         )
         self._on_signal_changed()
         self.duration_scale.configure(state=tk.NORMAL)
-        self.status_var.set("Audio cargado correctamente. La barra de tiempo está habilitada.")
+        self.status_var.set("Audio cargado")
 
     def update_simulation(self) -> None:
         self.update_job = None
