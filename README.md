@@ -1,5 +1,6 @@
-# Simulación de un sistema de digitalización de señales
 
+#Grupo: Alexander Bonilla Higidio - Jhonatan Estiven Gurrute
+# Simulación de un sistema de digitalización de señales
 Proyecto de Comunicaciones Digitales - Universidad del Cauca.
 
 ## Requisitos
