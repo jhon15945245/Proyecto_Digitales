@@ -55,4 +55,4 @@ La Tabla 2 usa el audio cargado, 16 niveles y los factores indicados en la guía
 
 ## Nota sobre la referencia PCM
 
-El archivo WAV ya es una señal digital. Por ello, no se dispone de la señal analógica previa a su cuantificación original. La aplicación muestra una referencia reproducible basada en la resolución nominal del PCM del WAV (por ejemplo, 16 bits = 65536 niveles), usando un cuantificador uniforme sobre [-1, 1]. Esta referencia debe explicarse durante la sustentación como referencia de resolución PCM y no como acceso a la señal analógica original.
+El archivo WAV ya es una señal digital. Por ello, no se dispone de la señal analógica previa a su cuantificación original. La aplicación muestra una referencia reproducible basada en la resolución nominal del PCM del WAV (por ejemplo, 16 bits = 65536 niveles), usando un cuantificador uniforme sobre [-1, 1].
